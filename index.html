@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetMind - Evidence-Based Betting Urge Management</title>
+  <!-- Browser Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Mobile Header (Visible on screens < 768px) -->
+  <header class="mobile-header">
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle Navigation Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-brand">
+      <img src="favicon.svg" alt="BetMind Logo" class="mobile-logo">
+      <span class="mobile-title">BetMind</span>
+    </div>
+  </header>
+
+  <!-- Sidebar Overlay for Mobile View -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- App Main Split View Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation Drawer (Left Panel) -->
+    <aside class="sidebar" id="sidebar">
+      
+      <!-- Brand Header -->
+      <div class="sidebar-header">
+        <img src="favicon.svg" alt="BetMind Logo" class="sidebar-logo">
+        <h1 class="sidebar-title">BetMind</h1>
+      </div>
+      
+      <!-- Sidebar Scrollable Panels -->
+      <div class="sidebar-content">
+        
+        <!-- Connection Status & Server Setup Card -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">Backend Connection</h2>
+          <div class="status-indicator">
+            <span class="status-dot disconnected" id="connection-dot"></span>
+            <span id="connection-text">Checking connection...</span>
+          </div>
+          <div class="input-group">
+            <label for="api-url-input" class="input-label">FastAPI API URL</label>
+            <input type="text" id="api-url-input" class="text-input" value="http://localhost:8000" placeholder="e.g. http://localhost:8000">
+          </div>
+          <button type="button" class="btn-primary" id="reconnect-btn">
+            Connect Server
+          </button>
+        </div>
+
+        <!-- Theme Configuration Card -->
+        <div class="panel-card theme-switcher">
+          <span class="toggle-title">Appearance</span>
+          <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Theme">
+            <!-- Sun / Moon SVG (default Moon for Dark Mode) -->
+            <svg id="theme-icon" viewBox="0 0 24 24">
+              <!-- Moon Icon Path -->
+              <path d="M12 3c.132 0 .263 0 .393.007a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 3zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- User Registration Card -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">User Registration</h2>
+          <div class="input-group">
+            <label for="user-id-input" class="input-label">User Identifier (ID)</label>
+            <input type="text" id="user-id-input" class="text-input" placeholder="Enter User ID">
+          </div>
+          <button type="button" class="btn-primary" id="register-btn">
+            Register Session
+          </button>
+        </div>
+
+        <!-- Resilience Points Progress Tracker -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">Resilience Tracker</h2>
+          <div class="profile-row">
+            <div class="points-display">
+              <span class="points-value" id="points-counter">0</span>
+              <span class="points-label">pts</span>
+            </div>
+            <div class="input-label" id="user-role-label">Role: Guest</div>
+          </div>
+          <span class="input-label" id="active-user-display" style="word-break: break-all;">Not registered</span>
+        </div>
+
+        <!-- Active Protocols / Admin Controls Card -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">Active Protocols</h2>
+          <div class="admin-toggle-list">
+            
+            <!-- Breathe 4-7-8 Protocol -->
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <span class="toggle-title">BREATHE478</span>
+                <span class="toggle-desc">4-7-8 Breathing Technique</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="protocol-breathe-switch" disabled>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Distract 5M Protocol -->
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <span class="toggle-title">DISTRACT5M</span>
+                <span class="toggle-desc">5-Minute Sensory Grounding</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="protocol-distract-switch" disabled>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+          </div>
+          <span class="input-label" style="text-align: center; margin-top: 4px;">
+            Admin privileges required to toggle protocols
+          </span>
+        </div>
+
+      </div>
+      
+      <!-- Sidebar Footer -->
+      <footer class="sidebar-footer">
+        <a href="https://github.com/OYanEnrique" target="_blank" class="footer-link">Yan Enrique &copy; 2026</a>
+      </footer>
+
+    </aside>
+
+    <!-- Main Chat Window (Right Panel) -->
+    <main class="chat-panel">
+      
+      <!-- Conversation History Container -->
+      <div class="chat-messages" id="chat-messages">
+        <!-- Empty State (Shown initially) -->
+        <div class="chat-empty-state" id="chat-empty-state">
+          <svg class="empty-logo" viewBox="0 0 256 256">
+            <!-- Outer Centering Circle Frame -->
+            <circle cx="128" cy="128" r="112" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <!-- Stylized Brain Contour (Left Hemisphere) -->
+            <path d="M 120,80 C 95,80 75,95 75,120 C 75,140 85,150 85,160 C 85,175 95,188 120,188" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+            <!-- Stylized Brain Contour (Right Hemisphere) -->
+            <path d="M 136,80 C 161,80 181,95 181,120 C 181,140 171,150 171,160 C 171,175 161,188 136,188" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+            <!-- Core Mindfulness Wave inside Left Hemisphere -->
+            <path d="M 95,120 C 105,110 115,130 120,120" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" opacity="0.8" />
+            <!-- Core Mindfulness Wave inside Right Hemisphere -->
+            <path d="M 161,120 C 151,110 141,130 136,120" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" opacity="0.8" />
+            <!-- Center Diamond Spark of Focus/Concentration -->
+            <path d="M 128,112 L 138,128 L 128,144 L 118,128 Z" fill="currentColor" />
+          </svg>
+          <h2 class="empty-title">Welcome to BetMind</h2>
+          <p class="empty-desc">An evidence-based clinical companion designed to help sports bettors manage urges, perform cognitive distraction exercises, and complete behavioral self-assessments.</p>
+          
+          <!-- Instructions Grid -->
+          <div class="instructions-grid">
+            
+            <div class="instruction-card">
+              <span class="instruction-num">Step 1</span>
+              <h3 class="instruction-title">Register Session</h3>
+              <p class="instruction-text">Enter any User ID in the left sidebar and click Register. This creates a secure, dedicated session on your local server.</p>
+            </div>
+            
+            <div class="instruction-card">
+              <span class="instruction-num">Step 2</span>
+              <h3 class="instruction-title">Manage Betting Urges</h3>
+              <p class="instruction-text">Type your state or click the suggesting chips. The agent will guide you through BREATHE478 (breathing) or DISTRACT5M (grounding) to earn points.</p>
+            </div>
+            
+            <div class="instruction-card">
+              <span class="instruction-num">Step 3</span>
+              <h3 class="instruction-title">Self-Assessment</h3>
+              <p class="instruction-text">Ask the agent to take the PGSI test. Complete the 9-item questionnaire one by one to receive supportive feedback and calculate severity.</p>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Suggestion Action Chips -->
+      <div class="chips-container" id="chips-container">
+        <button type="button" class="suggestion-chip" data-msg="I am experiencing an active gambling urge">Active Gambling Urge</button>
+        <button type="button" class="suggestion-chip" data-msg="I want to complete the PGSI assessment">Take PGSI Test</button>
+        <button type="button" class="suggestion-chip" data-msg="Guide me through the BREATHE478 breathing exercise">Start Breathing Exercise</button>
+        <button type="button" class="suggestion-chip" data-msg="I need a sensory grounding distraction exercise">Start Grounding Distraction</button>
+      </div>
+
+      <!-- Message Input Form -->
+      <div class="chat-input-container">
+        <form class="chat-input-form" id="chat-form">
+          <input type="text" id="chat-input-field" class="chat-input-field" placeholder="Send a message to BetMind..." autocomplete="off">
+          <button type="submit" class="send-btn" aria-label="Send Message">
+            <svg viewBox="0 0 24 24">
+              <!-- Send Arrow Icon -->
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Client JavaScript Application -->
+  <script src="app.js"></script>
+</body>
+</html>

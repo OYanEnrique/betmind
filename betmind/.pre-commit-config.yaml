@@ -1,0 +1,19 @@
+repos:
+  - repo: local
+    hooks:
+      - id: end-of-file-fixer
+        name: Fix End of Files
+        entry: betmind/.venv/Scripts/end-of-file-fixer.exe
+        language: system
+        types: [python]
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        entry: betmind/.venv/Scripts/trailing-whitespace-fixer.exe
+        language: system
+        types: [python]
+      - id: semgrep
+        name: Semgrep Security Scan
+        entry: >-
+          betmind/.venv/Scripts/python.exe -c "import sys, types; m = types.ModuleType('resource'); m.RLIMIT_NOFILE = 0; m.getrlimit = lambda x: (1024, 1024); m.setrlimit = lambda x, y: None; sys.modules['resource'] = m; import semgrep.main; sys.argv = ['semgrep', 'scan', '--error', '--config', 'betmind/.semgrep/rules.yaml'] + sys.argv[1:]; sys.exit(semgrep.main.main())"
+        language: system
+        types: [python]
