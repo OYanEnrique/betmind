@@ -1,41 +1,7 @@
 # BetMind
 
 <p align="center">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="128" height="128">
-    <defs>
-      <!-- Calming Slate & Mint Gradient -->
-      <linearGradient id="mind-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#00e699" />
-        <stop offset="100%" stop-color="#00b386" />
-      </linearGradient>
-    </defs>
-    
-    <!-- Outer Centering Circle Frame -->
-    <circle cx="128" cy="128" r="112" fill="none" stroke="url(#mind-grad)" stroke-width="8" stroke-linecap="round" />
-    
-    <!-- Stylized Brain Contour (Left Hemisphere) -->
-    <path d="M 120,80 
-             C 95,80 75,95 75,120 
-             C 75,140 85,150 85,160 
-             C 85,175 95,188 120,188" 
-          fill="none" stroke="url(#mind-grad)" stroke-width="10" stroke-linecap="round" />
-          
-    <!-- Stylized Brain Contour (Right Hemisphere) -->
-    <path d="M 136,80 
-             C 161,80 181,95 181,120 
-             C 181,140 171,150 171,160 
-             C 171,175 161,188 136,188" 
-          fill="none" stroke="url(#mind-grad)" stroke-width="10" stroke-linecap="round" />
-          
-    <!-- Core Mindfulness Wave inside Left Hemisphere -->
-    <path d="M 95,120 C 105,110 115,130 120,120" fill="none" stroke="url(#mind-grad)" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-    
-    <!-- Core Mindfulness Wave inside Right Hemisphere -->
-    <path d="M 161,120 C 151,110 141,130 136,120" fill="none" stroke="url(#mind-grad)" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-    
-    <!-- Center Diamond Spark of Focus/Concentration -->
-    <path d="M 128,112 L 138,128 L 128,144 L 118,128 Z" fill="url(#mind-grad)" />
-  </svg>
+  <img src="favicon.svg" width="128" height="128" alt="BetMind Logo" />
 </p>
 
 <p align="center">
