@@ -20,9 +20,9 @@ Developed by [Yan Enrique](https://github.com/OYanEnrique) as the Capstone Proje
 
 ## Project Vision & Story
 
-Sports betting has transitioned from a physical activity to an instant, highly gamified digital experience. With the rise of mobile sportsbooks, a bettor can place a wager in seconds, often driven by cognitive distortions or acute emotional impulses. During these critical windows of vulnerability (gambling urges), typical interventions like helpline numbers or static support articles are passive and fail to engage the user.
+The conceptual foundation of **BetMind** was born directly out of my Master's thesis research, which investigates the behavioral profiles, usage patterns, and cognitive triggers of sports betting platform users. A key gap identified in my thesis is the complete absence of active, real-time crisis intervention tools. While modern sportsbooks make placing a bet completely friction-free, mental health and harm-reduction mechanisms remain passive.
 
-BetMind was conceived to address this gap as an active, compassionate, and clinically informed digital gatekeeper. Rather than acting as a static form, BetMind is a conversational partner that guides the user through crisis moments in real time. It balances the conversational versatility of Large Language Models with programmatically enforced clinical guardrails to deliver a safe, secure, and structured environment for behavioral harm reduction.
+To bridge this gap, BetMind was designed and pair-programmed using **Antigravity**, an advanced agentic AI coding assistant, following the prototype-driven vibe coding principles taught in the [Google 5-Day AI Agents Intensive Vibe Coding Course on Kaggle](https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google/overview). By combining Antigravity's co-authoring capabilities with the Google Agent Development Kit (ADK) and Gemini 2.5 Flash, we engineered an active, clinically informed conversational companion that guides users through crisis moments under strict programmatic safety constraints.
 
 <p align="center">
   <img src="assets/landing_page.png" width="19%" alt="Landing Page" />

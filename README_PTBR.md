@@ -20,9 +20,9 @@ Desenvolvido por [Yan Enrique](https://github.com/OYanEnrique) como o Projeto Ca
 
 ## Visão e História do Projeto
 
-As apostas esportivas passaram de uma atividade física para uma experiência digital instantânea e altamente gamificada. Com a popularização das casas de apostas móveis, o apostador pode fazer uma aposta em segundos, muitas vezes movido por distorções cognitivas ou impulsos emocionais agudos. Durante essas janelas críticas de vulnerabilidade (impulsos de jogo), as intervenções tradicionais, como números de telefone de suporte ou artigos estáticos, são passivas e não conseguem engajar o usuário.
+A base conceitual do **BetMind** nasceu diretamente da minha pesquisa de dissertação de mestrado, que investiga o perfil comportamental, os padrões de uso e os gatilhos cognitivos de usuários de plataformas de apostas esportivas. Uma lacuna crítica identificada em minha tese foi a ausência de ferramentas de intervenção ativa em tempo real. Enquanto as casas de apostas modernas tornam o ato de apostar totalmente livre de atritos, os mecanismos de suporte e redução de danos permanecem passivos.
 
-O BetMind foi concebido para preencher essa lacuna como um acompanhante digital ativo, compassivo e clinicamente informado. Em vez de agir como um formulário estático, o BetMind é um parceiro de conversa que guia o usuário em momentos de crise em tempo real. Ele equilibra a versatilidade de conversação dos Grandes Modelos de Linguagem com limites programáticos de segurança aplicados para fornecer um ambiente seguro e estruturado para redução de danos comportamentais.
+Para preencher essa lacuna, o BetMind foi concebido e co-desenvolvido usando o **Antigravity**, um assistente de programação de inteligência artificial de última geração, seguindo os princípios de "vibe coding" focados em prototipagem rápida ensinados no curso oficial [5-Day AI Agents Intensive Vibe Coding Course no Kaggle](https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google/overview). Ao unir as capacidades do Antigravity ao Google Agent Development Kit (ADK) e ao Gemini 2.5 Flash, construímos um parceiro de conversa ativo e clinicamente informado para guiar o usuário em momentos de crise sob regras rígidas de segurança.
 
 <p align="center">
   <img src="assets/landing_page.png" width="19%" alt="Landing Page" />
