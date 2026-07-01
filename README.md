@@ -76,6 +76,7 @@ BetMind is engineered with a strict division of concerns using a client-server a
   - **Protocol Toggles**: Only users with the `"admin"` role are authorized to modify protocol statuses via `update_protocol_status`.
   - **Deactivation Enforcement**: The `retrieve_intervention_exercise` tool checks the session database and blocks any disabled protocols, returning a structured error message to the agent.
   - **Audit Logging**: Successful interventions trigger the `process_session_resolution` tool, which saves session metadata to the local audit log and locks the session state.
+  - **Topic-Straying Prevention (Focus Guardrail)**: System instructions strictly restrict the conversation to sports betting harm reduction, PGSI assessment, and grounding exercises. General knowledge or off-topic queries are politely declined and redirected to keep the user focused on their recovery.
 
 ### 2. The Frontend (Material Design 3 Expressive)
 - **Minimalist Aesthetic**: Styled to fit exactly in the browser viewport (`100dvh`), removing unnecessary clutter to keep the user focused.

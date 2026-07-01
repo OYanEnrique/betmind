@@ -76,6 +76,7 @@ O BetMind é projetado com uma divisão rígida de responsabilidades através de
   - **Toggles de Protocolo**: Apenas usuários com a função `"admin"` têm permissão para modificar os status dos protocolos via `update_protocol_status`.
   - **Aplicação de Desativação**: A ferramenta `retrieve_intervention_exercise` verifica o banco de dados da sessão e bloqueia qualquer protocolo desativado, retornando um erro estruturado para o agente.
   - **Log de Auditoria**: Intervenções bem-sucedidas chamam a ferramenta `process_session_resolution`, que salva os metadados da sessão no log de auditoria local e bloqueia o estado da sessão.
+  - **Prevenção de Fuga do Assunto (Guardrail de Foco)**: As instruções do sistema restringem estritamente a conversa a redução de danos em apostas esportivas, avaliação PGSI e exercícios de relaxamento. Perguntas de conhecimentos gerais ou fora do escopo são educadamente declinadas e redirecionadas para manter o foco do usuário na recuperação.
 
 ### 2. O Frontend (Material Design 3 Expressive)
 - **Estética Minimalista**: Estilizado para caber exatamente no viewport do navegador (`100dvh`), removendo qualquer distração para manter o usuário concentrado.
