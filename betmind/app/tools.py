@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime, timezone, timedelta
 
 from google.adk.tools import ToolContext
 from pydantic import BaseModel, Field, ValidationError
@@ -29,9 +30,8 @@ CRISIS_PROTOCOLS = {
 }
 
 
-class AwardPointsInput(BaseModel):
+class RecordInteractionInput(BaseModel):
     user_id: str = Field(..., min_length=1)
-    points: int = Field(..., ge=1, le=50)
     exercise_code: str = Field(..., min_length=1)
 
 
@@ -110,32 +110,31 @@ def retrieve_intervention_exercise(
     return {"status": "success", "protocol_code": code_upper, "exercise": exercise}
 
 
-def award_resilience_points(
-    user_id: str, points: int, exercise_code: str, tool_context: ToolContext
+def record_consecutive_interaction(
+    user_id: str, exercise_code: str, tool_context: ToolContext
 ) -> dict:
-    """Awards resilience points to the user's account after successful completion of an exercise.
+    """Records user interaction after successful completion of an exercise, updating their consecutive days streak.
 
     Args:
         user_id: The registered unique identifier of the user.
-        points: The number of resilience points to award (1 to 50).
         exercise_code: The code of the completed exercise (e.g., 'BREATHE478').
 
     Returns:
-        A dictionary indicating status, message, and updated total points.
+        A dictionary indicating status, message, and updated consecutive days streak.
     """
     # 1. Pydantic input validation (Standard 1 of CONTEXT.md)
     try:
-        validated_input = AwardPointsInput(
-            user_id=user_id, points=points, exercise_code=exercise_code
+        validated_input = RecordInteractionInput(
+            user_id=user_id, exercise_code=exercise_code
         )
     except ValidationError as e:
-        logger.warning(f"Validation failed for award_resilience_points: {e!s}")
+        logger.warning(f"Validation failed for record_consecutive_interaction: {e!s}")
         return {"status": "error", "message": f"Input validation failed: {e!s}"}
 
     # 2. Access Control check: verify user is registered in session and matches
     registered_user = tool_context.state.get("user_id")
     if not registered_user:
-        logger.warning("Attempted to award points to an unregistered session.")
+        logger.warning("Attempted to record interaction for an unregistered session.")
         return {
             "status": "error",
             "message": "Access Denied: No user is registered in this session.",
@@ -155,40 +154,64 @@ def award_resilience_points(
     retrieved_key = f"exercise_retrieved:{code_upper}"
     if not tool_context.state.get(retrieved_key):
         logger.warning(
-            f"User '{registered_user}' attempted to claim points for '{code_upper}' without retrieving it first."
+            f"User '{registered_user}' attempted to record interaction for '{code_upper}' without retrieving it first."
         )
         return {
             "status": "error",
-            "message": f"Access Denied: You must retrieve the exercise '{code_upper}' before claiming points.",
+            "message": f"Access Denied: You must retrieve the exercise '{code_upper}' before recording your interaction.",
         }
 
     awarded_exercises = tool_context.state.get("awarded_exercises", [])
     if code_upper in awarded_exercises:
         logger.warning(
-            f"User '{registered_user}' attempted to double-claim points for '{code_upper}'."
+            f"User '{registered_user}' attempted to double-record interaction for '{code_upper}'."
         )
         return {
             "status": "error",
-            "message": f"Access Denied: Points have already been awarded for the exercise '{code_upper}' in this session.",
+            "message": f"Access Denied: Interaction has already been recorded for the exercise '{code_upper}' in this session.",
         }
 
-    # 4. Award points
-    current_points = tool_context.state.get("resilience_points", 0)
-    new_points = current_points + validated_input.points
-    tool_context.state["resilience_points"] = new_points
+    # 4. Record daily interaction and calculate consecutive days streak (UTC based)
+    current_streak = tool_context.state.get("consecutive_days", 0)
+    last_date_str = tool_context.state.get("last_interaction_date")
 
-    # Record the award to prevent double-claiming
+    today = datetime.now(timezone.utc).date()
+    today_str = today.isoformat()
+
+    if not last_date_str:
+        new_streak = 1
+    else:
+        try:
+            last_date = datetime.strptime(last_date_str, "%Y-%m-%d").date()
+            delta = today - last_date
+            if delta.days == 0:
+                # Already interacted today, streak stays the same
+                new_streak = current_streak if current_streak > 0 else 1
+            elif delta.days == 1:
+                # Consecutive day interaction, increment streak
+                new_streak = current_streak + 1
+            else:
+                # Streak broken, reset to 1
+                new_streak = 1
+        except Exception as e:
+            logger.warning(f"Error parsing last_interaction_date '{last_date_str}': {e!s}")
+            new_streak = 1
+
+    tool_context.state["consecutive_days"] = new_streak
+    tool_context.state["last_interaction_date"] = today_str
+
+    # Record the completed exercise to prevent double-recording in this session
     tool_context.state["awarded_exercises"] = [*awarded_exercises, code_upper]
 
     logger.info(
-        f"Awarded {validated_input.points} points to user {registered_user} for exercise {code_upper}. New total: {new_points}"
+        f"Recorded interaction for user {registered_user} on exercise {code_upper}. Streak: {new_streak} days"
     )
     return {
         "status": "success",
-        "message": f"Successfully awarded {validated_input.points} resilience points for completing '{code_upper}'.",
+        "message": f"Successfully recorded daily interaction for completing '{code_upper}'. Consecutive days streak: {new_streak}.",
         "user_id": registered_user,
         "exercise_code": code_upper,
-        "resilience_points": new_points,
+        "consecutive_days": new_streak,
     }
 
 
@@ -242,17 +265,17 @@ def process_session_resolution(
         )
         return {
             "status": "error",
-            "message": f"Access Denied: You must complete the exercise '{code_upper}' and claim points before resolving the session.",
+            "message": f"Access Denied: You must complete the exercise '{code_upper}' and record your interaction before resolving the session.",
         }
 
     # 5. Sanitize and construct the structured audit log (Mitigate log injection)
-    resilience_points = tool_context.state.get("resilience_points", 0)
+    consecutive_days = tool_context.state.get("consecutive_days", 0)
     resolution_log = {
         "event": "session_resolution",
         "session_id": validated_input.session_id,
         "user_id": registered_user,
         "protocol_code": code_upper,
-        "resilience_points_earned": resilience_points,
+        "consecutive_days": consecutive_days,
         "status": "resolved",
     }
 

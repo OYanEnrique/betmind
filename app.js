@@ -9,7 +9,7 @@ const state = {
   fastApiUrl: localStorage.getItem('betmind_api_url') || 'http://localhost:8000',
   userId: localStorage.getItem('betmind_user_id') || '',
   sessionId: localStorage.getItem('betmind_session_id') || '',
-  resiliencePoints: 0,
+  consecutiveDays: 0,
   userRole: 'guest',
   activeProtocols: {
     BREATHE478: true,
@@ -102,11 +102,17 @@ function setupEventListeners() {
   
   // Reconnect server button
   elements.reconnectBtn.addEventListener('click', async () => {
+    const inputUrl = elements.apiUrlInput.value.trim();
+    if (state.isConnected && inputUrl === state.fastApiUrl) {
+      alert('Already connected to this server.');
+      return;
+    }
+    
     const originalText = elements.reconnectBtn.innerText;
     elements.reconnectBtn.innerText = 'Connecting...';
     elements.reconnectBtn.disabled = true;
     
-    state.fastApiUrl = elements.apiUrlInput.value.trim();
+    state.fastApiUrl = inputUrl;
     localStorage.setItem('betmind_api_url', state.fastApiUrl);
     
     const isSuccess = await checkBackendConnection();
@@ -252,9 +258,9 @@ async function syncSessionState() {
     const data = await response.json();
     const sessionState = data.state || {};
     
-    // Parse resilience points from state
-    state.resiliencePoints = sessionState.resilience_points || 0;
-    elements.pointsCounter.innerText = state.resiliencePoints;
+    // Parse consecutive days streak from state
+    state.consecutiveDays = sessionState.consecutive_days || 0;
+    elements.pointsCounter.innerText = state.consecutiveDays;
     
     // Parse user role (check admin privileges)
     state.userRole = sessionState.user_role || 'guest';

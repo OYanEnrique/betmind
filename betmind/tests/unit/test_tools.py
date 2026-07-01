@@ -1,5 +1,5 @@
 from app.tools import (
-    award_resilience_points,
+    record_consecutive_interaction,
     process_session_resolution,
     register_user,
     retrieve_intervention_exercise,
@@ -61,42 +61,25 @@ def test_retrieve_intervention_exercise_registered():
     assert "Protocol 'INVALID' not found" in res_invalid["message"]
 
 
-def test_award_resilience_points_validation():
+def test_record_consecutive_interaction_validation():
     ctx = MockToolContext()
     ctx.state["user_id"] = "test_user_123"
     ctx.state["exercise_retrieved:BREATHE478"] = True
 
-    # Test negative points
-    res = award_resilience_points(
-        user_id="test_user_123", points=-5, exercise_code="BREATHE478", tool_context=ctx
-    )
-    assert res["status"] == "error"
-    assert "Input validation failed" in res["message"]
-
-    # Test excessive points (cap is 50)
-    res_excessive = award_resilience_points(
-        user_id="test_user_123",
-        points=100,
-        exercise_code="BREATHE478",
-        tool_context=ctx,
-    )
-    assert res_excessive["status"] == "error"
-    assert "Input validation failed" in res_excessive["message"]
-
     # Test empty user_id
-    res_empty_user = award_resilience_points(
-        user_id="", points=10, exercise_code="BREATHE478", tool_context=ctx
+    res_empty_user = record_consecutive_interaction(
+        user_id="", exercise_code="BREATHE478", tool_context=ctx
     )
     assert res_empty_user["status"] == "error"
     assert "Input validation failed" in res_empty_user["message"]
 
 
-def test_award_resilience_points_auth_and_access():
+def test_record_consecutive_interaction_auth_and_access():
     ctx = MockToolContext()
 
     # Test unregistered session
-    res = award_resilience_points(
-        user_id="test_user_123", points=10, exercise_code="BREATHE478", tool_context=ctx
+    res = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx
     )
     assert res["status"] == "error"
     assert "No user is registered" in res["message"]
@@ -105,20 +88,20 @@ def test_award_resilience_points_auth_and_access():
     ctx.state["user_id"] = "test_user_123"
 
     # Test user_id mismatch
-    res_mismatch = award_resilience_points(
-        user_id="wrong_user", points=10, exercise_code="BREATHE478", tool_context=ctx
+    res_mismatch = record_consecutive_interaction(
+        user_id="wrong_user", exercise_code="BREATHE478", tool_context=ctx
     )
     assert res_mismatch["status"] == "error"
     assert "does not match the registered user" in res_mismatch["message"]
 
 
-def test_award_resilience_points_eligibility_and_double_claim():
+def test_record_consecutive_interaction_eligibility_and_double_claim():
     ctx = MockToolContext()
     ctx.state["user_id"] = "test_user_123"
 
-    # Test claiming points without retrieving exercise first
-    res = award_resilience_points(
-        user_id="test_user_123", points=10, exercise_code="BREATHE478", tool_context=ctx
+    # Test claiming without retrieving exercise first
+    res = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx
     )
     assert res["status"] == "error"
     assert "You must retrieve the exercise" in res["message"]
@@ -127,19 +110,68 @@ def test_award_resilience_points_eligibility_and_double_claim():
     retrieve_intervention_exercise(protocol_code="BREATHE478", tool_context=ctx)
 
     # Success path: first claim
-    res_success = award_resilience_points(
-        user_id="test_user_123", points=10, exercise_code="BREATHE478", tool_context=ctx
+    res_success = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx
     )
     assert res_success["status"] == "success"
-    assert res_success["resilience_points"] == 10
-    assert ctx.state["resilience_points"] == 10
+    assert res_success["consecutive_days"] == 1
+    assert ctx.state["consecutive_days"] == 1
 
-    # Test double-claiming same exercise
-    res_double = award_resilience_points(
-        user_id="test_user_123", points=10, exercise_code="BREATHE478", tool_context=ctx
+    # Test double-claiming same exercise in the same session
+    res_double = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx
     )
     assert res_double["status"] == "error"
-    assert "Points have already been awarded" in res_double["message"]
+    assert "Interaction has already been recorded" in res_double["message"]
+
+
+def test_record_consecutive_interaction_streak_math():
+    from datetime import datetime, timezone, timedelta
+    today_str = datetime.now(timezone.utc).date().isoformat()
+    yesterday_str = (datetime.now(timezone.utc).date() - timedelta(days=1)).isoformat()
+    two_days_ago_str = (datetime.now(timezone.utc).date() - timedelta(days=2)).isoformat()
+
+    # Case 1: First interaction
+    ctx1 = MockToolContext()
+    ctx1.state["user_id"] = "test_user_123"
+    ctx1.state["exercise_retrieved:BREATHE478"] = True
+    res1 = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx1
+    )
+    assert res1["consecutive_days"] == 1
+
+    # Case 2: Same day interaction (streak stays same)
+    ctx2 = MockToolContext()
+    ctx2.state["user_id"] = "test_user_123"
+    ctx2.state["consecutive_days"] = 3
+    ctx2.state["last_interaction_date"] = today_str
+    ctx2.state["exercise_retrieved:BREATHE478"] = True
+    res2 = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx2
+    )
+    assert res2["consecutive_days"] == 3
+
+    # Case 3: Yesterday interaction (consecutive day, streak increments)
+    ctx3 = MockToolContext()
+    ctx3.state["user_id"] = "test_user_123"
+    ctx3.state["consecutive_days"] = 3
+    ctx3.state["last_interaction_date"] = yesterday_str
+    ctx3.state["exercise_retrieved:BREATHE478"] = True
+    res3 = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx3
+    )
+    assert res3["consecutive_days"] == 4
+
+    # Case 4: Broken streak (resets to 1)
+    ctx4 = MockToolContext()
+    ctx4.state["user_id"] = "test_user_123"
+    ctx4.state["consecutive_days"] = 5
+    ctx4.state["last_interaction_date"] = two_days_ago_str
+    ctx4.state["exercise_retrieved:BREATHE478"] = True
+    res4 = record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx4
+    )
+    assert res4["consecutive_days"] == 1
 
 
 def test_process_session_resolution_validation():
@@ -184,10 +216,10 @@ def test_process_session_resolution_workflow_completion():
     assert res["status"] == "error"
     assert "You must complete the exercise" in res["message"]
 
-    # Retrieve and complete the exercise (award points)
+    # Retrieve and complete the exercise
     retrieve_intervention_exercise(protocol_code="BREATHE478", tool_context=ctx)
-    award_resilience_points(
-        user_id="test_user_123", points=10, exercise_code="BREATHE478", tool_context=ctx
+    record_consecutive_interaction(
+        user_id="test_user_123", exercise_code="BREATHE478", tool_context=ctx
     )
 
     # Test successful session resolution
@@ -198,7 +230,7 @@ def test_process_session_resolution_workflow_completion():
     assert "successfully resolved" in res_success["message"]
     assert ctx.state["session_resolved"] is True
     assert ctx.state["resolution_protocol"] == "BREATHE478"
-    assert res_success["audit_log"]["resilience_points_earned"] == 10
+    assert res_success["audit_log"]["consecutive_days"] == 1
 
 
 def test_update_protocol_status_validation():

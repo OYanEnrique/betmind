@@ -32,7 +32,7 @@ except Exception:
     logger = logging.getLogger(__name__)
 
 allow_origins = (
-    os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_ORIGINS") else None
+    os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_ORIGINS") else ["*"]
 )
 
 # Artifact bucket for ADK (created by Terraform, passed via env var)
@@ -73,7 +73,10 @@ def collect_feedback(feedback: Feedback) -> dict[str, str]:
     Returns:
         Success message
     """
-    logger.log_struct(feedback.model_dump(), severity="INFO")
+    if hasattr(logger, "log_struct"):
+        logger.log_struct(feedback.model_dump(), severity="INFO")
+    else:
+        logger.info(f"Feedback: {feedback.model_dump()}")
     return {"status": "success"}
 
 

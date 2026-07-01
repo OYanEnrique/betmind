@@ -25,7 +25,7 @@ def test_agent_configuration():
     tool_names = [t.__name__ for t in root_agent.tools]
     assert "register_user" in tool_names
     assert "retrieve_intervention_exercise" in tool_names
-    assert "award_resilience_points" in tool_names
+    assert "record_consecutive_interaction" in tool_names
     assert "process_session_resolution" in tool_names
     assert "update_protocol_status" in tool_names
 
@@ -33,7 +33,7 @@ def test_agent_configuration():
     instruction = root_agent.instruction
     assert isinstance(instruction, str)
     assert "Problem Gambling Severity Index" in instruction
-    assert "award_resilience_points" in instruction
+    assert "record_consecutive_interaction" in instruction
     assert "process_session_resolution" in instruction
 
 

@@ -24,7 +24,7 @@ from google.genai import types, Client
 from .tools import (
     retrieve_intervention_exercise,
     register_user,
-    award_resilience_points,
+    record_consecutive_interaction,
     process_session_resolution,
     update_protocol_status,
 )
@@ -84,16 +84,13 @@ Core Capabilities:
      * 8 or more: Problem gambler (leading to negative consequences and a possible loss of control)
    - Provide compassionate, evidence-based feedback based on their score and direct them to helpful resources (e.g., helplines) if appropriate.
 
-4. Awarding Resilience Points:
-   - Once the user successfully completes a retrieved intervention exercise, award them resilience points using the `award_resilience_points` tool.
-   - Default points award scheme:
-     * 10 points for BREATHE478 (4-7-8 breathing)
-     * 20 points for DISTRACT5M (5-minute grounding)
-   - You must only award points after they state they have completed the exercise.
+4. Recording Consecutive Interaction Days:
+   - Once the user successfully completes a retrieved intervention exercise, record their daily completion using the `record_consecutive_interaction` tool.
+   - You must only record the interaction after they state they have completed the exercise.
    - Ensure the user's registered user ID is supplied correctly as a parameter.
 
 5. Session Resolution:
-   - When the user indicates that their crisis or gambling urge is successfully managed/resolved, or at the end of the conversation after points are awarded, you MUST call the `process_session_resolution` tool.
+   - When the user indicates that their crisis or gambling urge is successfully managed/resolved, or at the end of the conversation after recording their interaction, you MUST call the `process_session_resolution` tool.
    - Ensure you supply the active session ID and the matching completed exercise protocol code (e.g., 'BREATHE478').
    - Explain to the user that their session is officially resolved and saved to the audit log.
 
@@ -102,7 +99,7 @@ Core Capabilities:
    - Regular users cannot perform this action.
 
 User Registration:
-- Before accessing any crisis protocol intervention exercises or claiming resilience points, you MUST verify that the user's `user_id` is registered in the session state.
+- Before accessing any crisis protocol intervention exercises or recording your interaction, you MUST verify that the user's `user_id` is registered in the session state.
 - If it is not registered, ask the user to provide their user ID and use the `register_user` tool to register them first.
 """
 
@@ -117,7 +114,7 @@ root_agent = Agent(
     tools=[
         retrieve_intervention_exercise,
         register_user,
-        award_resilience_points,
+        record_consecutive_interaction,
         process_session_resolution,
         update_protocol_status,
     ],
