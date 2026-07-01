@@ -44,7 +44,7 @@ BetMind integrates five core modules:
 1. **Urge Intervention Guiding**: Active, empathetic crisis management when users experience active urges to bet.
 2. **Cognitive Distraction Techniques**: Direct access to guided breathing protocols (BREATHE478) and sensory grounding exercises (DISTRACT5M) to redirect the user's attention.
 3. **Problem Gambling Severity Index (PGSI) Assessment**: A conversational implementation of the standard 9-item PGSI questionnaire. The agent administers the questions one by one, calculates the final score, determines the severity tier (Non-problem, Low, Moderate, or Problem Gambler), and provides supportive, non-judgmental clinical feedback.
-4. **Resilience Tracker**: A gamified reward loop where users earn Resilience Points (10 points for breathing, 20 points for grounding) after programmatically confirming the completion of an exercise.
+4. **Resilience Streak**: A habit-building tracker where users build a consecutive interaction days streak after programmatically confirming the completion of an exercise.
 5. **Administrative Console**: An interface that permits system administrators to enable or disable specific crisis protocols in real time.
 
 ---
@@ -75,7 +75,7 @@ BetMind is engineered with a strict division of concerns using a client-server a
 - **Calming Color Theme (Slate & Mint)**: Dark mode (charcoal background with mint green accents) and light mode (soothing slate gray) options to lower cognitive strain.
 - **Connection Diagnostics**: Implements a diagnostics system using `no-cors` pre-checks to verify the server status.
 - **SSE Stream Decoder**: Reads the Server-Sent Events (SSE) stream chunk-by-chunk, accumulating partial data to display responses incrementally and overriding with the final payload to prevent repetition bugs.
-- **Session Syncing**: Polls the backend database after every turn to synchronize points and active protocols.
+- **Session Syncing**: Polls the backend database after every turn to synchronize the streak and active protocols.
 
 ---
 

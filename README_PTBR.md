@@ -44,7 +44,7 @@ O BetMind integra cinco módulos principais:
 1. **Guia de Intervenção de Impulsos**: Gerenciamento ativo e compassivo de crises quando os usuários experimentam impulsos de aposta ativos.
 2. **Técnicas de Distração Cognitiva**: Acesso direto a protocolos de respiração guiada (BREATHE478) e exercícios de ancoragem sensorial (DISTRACT5M) para redirecionar a atenção do usuário.
 3. **Avaliação PGSI (Problem Gambling Severity Index)**: Uma implementação conversacional do questionário padrão de 9 itens do PGSI. O agente administra as perguntas uma a uma, calcula a pontuação final, determina o nível de gravidade (Jogador não problemático, Baixo risco, Médio risco ou Jogador compulsivo) e fornece um feedback clínico acolhedor e sem julgamentos.
-4. **Rastreador de Resiliência**: Um ciclo gamificado de recompensas onde os usuários ganham Pontos de Resiliência (10 pontos para respiração, 20 pontos para ancoragem) após confirmarem programaticamente a conclusão de um exercício.
+4. **Rastreador de Resiliência (Streak)**: Um rastreador focado em hábitos onde os usuários constroem uma sequência de dias consecutivos de interação após confirmarem programaticamente a conclusão de um exercício.
 5. **Console Administrativo**: Uma interface que permite aos administradores do sistema ativar ou desativar protocolos de crise específicos em tempo real.
 
 ---
@@ -75,7 +75,7 @@ O BetMind é projetado com uma divisão rígida de responsabilidades através de
 - **Tema de Cores Calmas (Slate & Mint)**: Opções de modo escuro (fundo chumbo com detalhes em verde-menta) e modo claro (fundo cinza ardósia suave) para reduzir o cansaço visual.
 - **Diagnósticos de Conexão**: Implementa uma verificação rápida usando chamadas com `mode: 'no-cors'` para verificar se o servidor está online.
 - **Decodificador de Fluxo SSE**: Lê o fluxo de Server-Sent Events (SSE) caractere por caractere, acumulando dados parciais para exibição incremental em tempo real e corrigindo bugs de repetição.
-- **Sincronização de Sessão**: Consulta o backend após cada turno de conversa para atualizar os pontos e os protocolos ativos.
+- **Sincronização de Sessão**: Consulta o backend após cada turno de conversa para atualizar a sequência de dias consecutivos e os protocolos ativos.
 
 ---
 
