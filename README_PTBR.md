@@ -24,7 +24,13 @@ As apostas esportivas passaram de uma atividade física para uma experiência di
 
 O BetMind foi concebido para preencher essa lacuna como um acompanhante digital ativo, compassivo e clinicamente informado. Em vez de agir como um formulário estático, o BetMind é um parceiro de conversa que guia o usuário em momentos de crise em tempo real. Ele equilibra a versatilidade de conversação dos Grandes Modelos de Linguagem com limites programáticos de segurança aplicados para fornecer um ambiente seguro e estruturado para redução de danos comportamentais.
 
-![Interface do Aplicativo BetMind](assets/screenshot_001.png)
+<p align="center">
+  <img src="assets/landing_page.png" width="19%" alt="Landing Page" />
+  <img src="assets/user_registration.png" width="19%" alt="User Registration" />
+  <img src="assets/breathing_exercise.png" width="19%" alt="Breathing Exercise" />
+  <img src="assets/pgsi_test.png" width="19%" alt="PGSI Test" />
+  <img src="assets/admin_console.png" width="19%" alt="Admin Console" />
+</p>
 
 ---
 

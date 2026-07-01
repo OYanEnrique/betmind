@@ -24,7 +24,13 @@ Sports betting has transitioned from a physical activity to an instant, highly g
 
 BetMind was conceived to address this gap as an active, compassionate, and clinically informed digital gatekeeper. Rather than acting as a static form, BetMind is a conversational partner that guides the user through crisis moments in real time. It balances the conversational versatility of Large Language Models with programmatically enforced clinical guardrails to deliver a safe, secure, and structured environment for behavioral harm reduction.
 
-![BetMind Application Interface](assets/screenshot_001.png)
+<p align="center">
+  <img src="assets/landing_page.png" width="19%" alt="Landing Page" />
+  <img src="assets/user_registration.png" width="19%" alt="User Registration" />
+  <img src="assets/breathing_exercise.png" width="19%" alt="Breathing Exercise" />
+  <img src="assets/pgsi_test.png" width="19%" alt="PGSI Test" />
+  <img src="assets/admin_console.png" width="19%" alt="Admin Console" />
+</p>
 
 ---
 
