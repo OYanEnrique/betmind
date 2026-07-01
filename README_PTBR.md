@@ -40,6 +40,7 @@ Este projeto foi construído durante o curso de 5 dias **AI Agents: Intensive Vi
 - **Página do Curso**: [5-Day AI Agents Course Overview](https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google/overview)
 - **Página do Capstone**: [Kaggle Capstone Project Registry](https://www.kaggle.com/competitions/vibecoding-agents-capstone-project)
 - **Trilha/Categoria**: Agents for Good
+- **Vídeo de Demonstração**: [Assista no YouTube](https://youtube.com/shorts/k3bExS9c2w4)
 
 ---
 

@@ -40,6 +40,7 @@ This project was built during the **5-Day AI Agents: Intensive Vibe Coding Cours
 - **Course Page**: [5-Day AI Agents Course Overview](https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google/overview)
 - **Capstone Project Page**: [Kaggle Capstone Project Registry](https://www.kaggle.com/competitions/vibecoding-agents-capstone-project)
 - **Track/Category**: Agents for Good
+- **Project Demo Video**: [Watch on YouTube](https://youtube.com/shorts/k3bExS9c2w4)
 
 ---
 
