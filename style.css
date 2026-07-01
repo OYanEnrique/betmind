@@ -408,6 +408,8 @@ input:checked + .slider:before {
   height: 100%;
   position: relative;
   background-color: var(--bg-app);
+  min-width: 0;
+  width: 100%;
 }
 
 /* Mobile Header (Hidden on Desktop) */
