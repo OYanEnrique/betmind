@@ -96,17 +96,24 @@ To run the BetMind backend and frontend servers locally on your machine, follow 
 - [Astral uv](https://github.com/astral-sh/uv) (Python package manager).
 - A valid Gemini API Key from Google AI Studio.
 
-### Step 1: Configure Backend Environment
-1. Navigate into the `betmind` subfolder:
+### Step 1: Clone the Repository
+Clone the repository to your local system:
+```bash
+git clone https://github.com/OYanEnrique/betmind.git
+cd betmind
+```
+
+### Step 2: Configure Backend Environment
+1. Navigate into the inner `betmind` subfolder:
    ```bash
    cd betmind
    ```
-2. Create a `.env` file inside the `betmind` folder and add your Gemini API Key:
+2. Create a `.env` file inside this folder and add your Gemini API Key:
    ```env
    GEMINI_API_KEY="your-gemini-api-key-here"
    ```
 
-### Step 2: Start the Backend Server
+### Step 3: Start the Backend Server
 Start the FastAPI server on port 8000. On Windows (PowerShell), enable CORS origin allowance to accept incoming connections from the local frontend:
 ```powershell
 $env:ALLOW_ORIGINS="*"
@@ -114,7 +121,7 @@ uv run uvicorn app.fast_api_app:app --host 127.0.0.1 --port 8000
 ```
 Verify the server is running by accessing `http://127.0.0.1:8000/health` in your browser.
 
-### Step 3: Start the Frontend Server
+### Step 4: Start the Frontend Server
 Open a new terminal window in the root directory of the project (`c:\Users\Yan Enrique\Documents\betmind`) and serve the static files:
 ```bash
 python -m http.server 3000
